@@ -1,4 +1,6 @@
 import argparse, os, sys, glob
+
+import json
 import cv2
 import torch
 import numpy as np
@@ -92,6 +94,12 @@ def check_safety(x_image):
         if has_nsfw_concept[i]:
             x_checked_image[i] = load_replacement(x_checked_image[i])
     return x_checked_image, has_nsfw_concept
+
+
+def save_opt(opt: argparse.Namespace) -> None:
+    path = f"{opt.outdir}/options.json"
+    with open(path, "w+") as f:
+        json.dump(vars(opt), f)
 
 
 def main():
@@ -226,7 +234,15 @@ def main():
         choices=["full", "autocast"],
         default="autocast"
     )
+    parser.add_argument(
+        "--save_options",
+        action='store_true',
+        help="save the script options in a json file"
+    )
     opt = parser.parse_args()
+
+    if opt.save_options:
+        save_opt(opt)
 
     if opt.laion400m:
         print("Falling back to LAION 400M model...")
