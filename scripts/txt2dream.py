@@ -340,7 +340,7 @@ def main():
                         x_T = []
                         for _ in range(opt.n_samples):
                             t = codes_t_space[codes_counter]
-                            x_T.append(slerp(t, start_code, end_code))
+                            x_T.append(slerp(t, start_code, end_code, device))
                             codes_counter += 1
                         x_T = torch.stack(x_T, 0)
                         samples_ddim, _ = sampler.sample(S=opt.ddim_steps,
